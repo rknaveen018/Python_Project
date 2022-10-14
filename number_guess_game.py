@@ -10,4 +10,4 @@ while guess < 4:
         print("\n🎉🎉🎉 you got me 🎉🎉🎉")
         break
 print("\n\t 👏👏👏 We had a great play 👏👏👏")
-print("happy playing")
+print("Happy playing")
