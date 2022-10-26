@@ -1,24 +1,24 @@
-import requests
 from bs4 import BeautifulSoup
-import csv
-url = "https://www.imdb.com/chart/top/"
+import requests, openpyxl
 
-response = requests.get(url)
+wb = openpyxl.Workbook()
+sheet = wb.active
+sheet.title = "Top 250 Movies"
+sheet.append(["Rank", "Movie Name", "Rating", "Year of release"])
 
-soup = BeautifulSoup(response.content, "html.parser")
+try:
+    response = requests.get("https://www.imdb.com/chart/top/")
+    soup = BeautifulSoup(response.text, "html.parser")
+    movie = soup.find("tbody", class_="lister-list").find_all("tr")
 
-TitleData = soup.findAll(class_="titleColumn")
+    for movies in movie:
+        rank = movies.find("td", class_="titleColumn").get_text(strip=True).split(".")[0]
+        movie_name = movies.find("td", class_ ="titleColumn").a.text
+        rating = movies.find("td", class_="ratingColumn imdbRating").strong.text
+        year = movies.find("td", class_="titleColumn").span.text.replace("("," ")
+        year = year.replace(")"," ")
+        sheet.append([rank, movie_name, rating, year])
+except Exception as e:
+    print(e)
 
-titles = []
-
-for title in TitleData:
-    titles.append(title.find('a').get_text())
-
-with open(r'C:\Users\rknav\Downloads\movies.csv', "w", newline="") as f:
-    wr = csv.writer(f)
-    wr.writerow(['Title'])
-    for title in titles:
-        wr.writerow([title])
-
-print('files created successfully')
-
+wb.save(r"C:\Users\rknav\Downloads\Movie_list.xlsx")
