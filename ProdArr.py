@@ -11,4 +11,4 @@ for i in range(len(l)):
             pass
     l_product.append(val)
 
-print(l_product)
+print("Product Array: ",l_product)
